@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalRChat.Hubs
@@ -12,35 +13,26 @@ namespace SignalRChat.Hubs
 
         public async Task Poke(string user, string message)
         {
-            var data = @"
+            
+            var data = new FlareItem
             {
-                ""name"": ""flare"",
-                ""children"": [
-                    {
-                    ""name"": ""analytics"",
-                    ""children"": [
+                Name = "flare",
+                Children = new []
+                {
+                    new FlareItem 
+                    { 
+                        Name="baby",
+                        Children = new []
                         {
-                        ""name"": ""cluster"",
-                        ""children"": [{
-                            ""name"": ""AgglomerativeCluster"",
-                            ""size"": 3938
-                        }, {
-                            ""name"": ""CommunityStructure"",
-                            ""size"": 3812
-                        }, {
-                            ""name"": ""HierarchicalCluster"",
-                            ""size"": 6714
-                        }, {
-                            ""name"": ""MergeEdge"",
-                            ""size"": 743
-                        }
-                        ]
+                            new FlareItem {Name= "Indigo", Size= 3938},
+                            new FlareItem {Name= "Aqua", Size=3812 },
+                            new FlareItem {Name= "Green", Size=6714 },
+                            new FlareItem {Name= "Turquoise", Size= 743}
+                        }.ToList()
                     }
-                    ]
-                    }
-                ]
-                }
-            ";
+                }.ToList()
+            };
+
             await Clients.Others.SendAsync("Refresh", user, data);
         }
     }

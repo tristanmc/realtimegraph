@@ -5,7 +5,7 @@
 $(function() {
     
 
-    var d = d3.json('js/flare.json', function(data) {
+    var d = d3.json('js/data.json', function(data) {
         console.log('flared');
         console.log(data.name);
     
@@ -163,7 +163,6 @@ $(function() {
             .attr("height", viewerHeight)
             .attr("class", "overlay")
             .call(zoomListener);
-
 
         // Define the drag listeners for drag/drop behaviour of nodes.
         dragListener = d3.behavior.drag()
@@ -345,6 +344,9 @@ $(function() {
         function click(d) {
             if (d3.event.defaultPrevented) return; // click suppressed
             d = toggleChildren(d);
+
+            console.log('Clicked');
+
             update(d);
             centerNode(d);
         }
@@ -446,8 +448,9 @@ $(function() {
             // Change the circle fill depending on whether it has children and is collapsed
             node.select("circle.nodeCircle")
                 .attr("r", 4.5)
-                .style("fill", function(d) {
-                    return d._children ? "lightsteelblue" : "#fff";
+                .style("stroke", function(d) {
+                    return d.colour;
+                    //return d._children ? "lightsteelblue" : "#fff";
                 });
 
             // Transition nodes to their new position.
@@ -551,13 +554,19 @@ $(function() {
         connection.on("Refresh", function (user, message) {
             console.log("Refreshing");
 
-            var d = d3.json('js/flare2.json', function(data) {
-                root = data;
-                root.x0 = viewerHeight / 2;
-                root.y0 = 0;
-                update(root);
-                centerNode(root);
-            });
+            root = message;
+            root.x0 = viewerHeight / 2;
+            root.y0 = 0;
+            update(root);
+            centerNode(root);
+
+            // var d = d3.json('js/flare2.json', function(data) {
+            //     root = data;
+            //     root.x0 = viewerHeight / 2;
+            //     root.y0 = 0;
+            //     update(root);
+            //     centerNode(root);
+            // });
            
         });
 
